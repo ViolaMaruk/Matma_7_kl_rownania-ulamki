@@ -39,9 +39,36 @@
         .task-card.correct-bg { background-color: #d4edda; border-left-color: #28a745; }
         .task-card.incorrect-bg { background-color: #f8d7da; border-left-color: #dc3545; }
         .task-text { font-size: 1.2em; margin-bottom: 15px; }
-        .equation { font-family: 'Courier New', Courier, monospace; font-size: 1.1em; background: #f8f9fa; padding: 4px 8px; border-radius: 4px;}
         
-        .input-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        /* СТИЛИ ДЛЯ КРАСИВЫХ УРАВНЕНИЙ И ДРОБЕЙ */
+        .equation { 
+            font-family: 'Georgia', 'Times New Roman', serif; 
+            font-size: 1.3em; 
+            background: #f8f9fa; 
+            padding: 8px 15px; 
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            line-height: 1.1;
+            font-size: 0.9em;
+        }
+        .frac .num {
+            border-bottom: 1.5px solid #333;
+            padding: 0 3px;
+        }
+        .frac .den {
+            padding: 2px 3px 0 3px;
+        }
+
+        .input-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px;}
         input[type="text"] {
             padding: 10px; font-size: 1em; border: 2px solid #e2e8f0;
             border-radius: 6px; flex-grow: 1; max-width: 300px; outline: none;
@@ -63,7 +90,6 @@
         .incorrect { color: #c0392b; }
         .hint-text { display: none; margin-top: 15px; padding: 12px; background-color: #fff3cd; border-left: 4px solid #ffc107; font-style: italic; color: #856404; border-radius: 0 6px 6px 0; }
 
-        /* СТИЛИ ДЛЯ СТАРТОВОГО ОКНА И КНОПКИ ОТПРАВКИ */
         #start-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); display: flex; justify-content: center;
@@ -118,7 +144,6 @@
     </div>
 
     <script>
-        // ДАННЫЕ УЧЕНИКА
         let currentStudent = "";
         let currentClass = "";
         let resultsData = {}; 
@@ -140,19 +165,29 @@
             document.getElementById("app-content").style.display = "block";
         }
 
-        // БАЗА ЗАДАНИЙ (Из ваших картинок)
+        // БАЗА ЗАДАНИЙ С КРАСИВЫМИ ДРОБЯМИ (HTML-структура дробей)
         const tasksData = [
-            { text: "Rozwiąż równanie: <span class='equation'>-(3x - 2) = -7</span>", hint: "Najpierw opuść nawias, zmieniając znaki (bo przed nawiasem jest minus).", answers: ["3", "x=3"] },
-            { text: "Rozwiąż równanie: <span class='equation'>3(x - 2) = x</span>", hint: "Pomnóż liczbę 3 przez każdy wyraz w nawiasie.", answers: ["3", "x=3"] },
-            { text: "Rozwiąż równanie: <span class='equation'>-(x + 4) = 2x - 1</span>", hint: "Opuść nawias (zmieniając znaki), a następnie przenieś niewiadome (x) na jedną stronę równania.", answers: ["-1", "x=-1"] },
-            { text: "Rozwiąż równanie: <span class='equation'>x/2 + 1 = 3/2 + x/4</span>", hint: "Pomnóż całe równanie przez wspólny mianownik, czyli 4, aby pozbyć się ułamków.", answers: ["2", "x=2"] },
-            { text: "Rozwiąż równanie: <span class='equation'>(3x - 1)/2 = 1/2 + x</span>", hint: "Pomnóż obie strony przez 2, aby zlikwidować ułamki.", answers: ["2", "x=2"] },
-            { text: "Rozwiąż równanie: <span class='equation'>(x + 3)/4 + (x - 2)/3 = 3</span>", hint: "Wspólnym mianownikiem dla 4 i 3 jest 12. Pomnóż obie strony przez 12.", answers: ["5", "x=5"] },
-            { text: "Rozwiąż równanie: <span class='equation'>(3x + 4)/5 = (2 - x)/4 + x</span>", hint: "Wspólnym mianownikiem jest 20. Pomnóż całe równanie przez 20.", answers: ["2", "x=2"] },
-            { text: "Rozwiąż równanie: <span class='equation'>(3x - 1)/2 - (5x + 1)/4 = 0</span>", hint: "Pomnóż przez 4. Pamiętaj o zmianie znaku w liczniku drugiego ułamka, bo przed nim stoi minus!", answers: ["3", "x=3"] },
-            { text: "Rozwiąż równanie: <span class='equation'>x/2 = 3/5(9 - x) - 1</span>", hint: "Pomnóż obustronnie przez 10, aby pozbyć się ułamków (2 i 5 w mianowniku).", answers: ["4", "x=4"] },
-            { text: "Rozwiąż równanie: <span class='equation'>(3x - 1)/5 - (x - 2)/3 = 0,5x</span>", hint: "Pomnóż przez 15. Zauważ, że z prawej strony: 0,5x * 15 = 7,5x.", answers: ["2", "x=2"] },
-            { text: "Rozwiąż równanie: <span class='equation'>x - (3x - 2)/4 = -1/2x + 2</span>", hint: "Pomnóż całe równanie obustronnie przez 4. Uważaj na minus przed ułamkiem!", answers: ["2", "x=2"] }
+            { text: "Rozwiąż równanie: <br><br><span class='equation'>-(3x - 2) = -7</span>", hint: "Najpierw opuść nawias, zmieniając znaki (bo przed nawiasem jest minus).", answers: ["3", "x=3"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'>3(x - 2) = x</span>", hint: "Pomnóż liczbę 3 przez każdy wyraz w nawiasie.", answers: ["3", "x=3"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'>-(x + 4) = 2x - 1</span>", hint: "Opuść nawias (zmieniając znaki), a następnie przenieś niewiadome (x) na jedną stronę równania.", answers: ["-1", "x=-1"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'><span class='frac'><span class='num'>x</span><span class='den'>2</span></span> + 1 = <span class='frac'><span class='num'>3</span><span class='den'>2</span></span> + <span class='frac'><span class='num'>x</span><span class='den'>4</span></span></span>", hint: "Pomnóż całe równanie przez wspólny mianownik, czyli 4, aby pozbyć się ułamków.", answers: ["2", "x=2"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'><span class='frac'><span class='num'>3x - 1</span><span class='den'>2</span></span> = <span class='frac'><span class='num'>1</span><span class='den'>2</span></span> + x</span>", hint: "Pomnóż obie strony przez 2, aby zlikwidować ułamki.", answers: ["2", "x=2"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'><span class='frac'><span class='num'>x + 3</span><span class='den'>4</span></span> + <span class='frac'><span class='num'>x - 2</span><span class='den'>3</span></span> = 3</span>", hint: "Wspólnym mianownikiem dla 4 i 3 jest 12. Pomnóż obie strony przez 12.", answers: ["5", "x=5"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'><span class='frac'><span class='num'>3x + 4</span><span class='den'>5</span></span> = <span class='frac'><span class='num'>2 - x</span><span class='den'>4</span></span> + x</span>", hint: "Wspólnym mianownikiem jest 20. Pomnóż całe równanie przez 20.", answers: ["2", "x=2"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'><span class='frac'><span class='num'>3x - 1</span><span class='den'>2</span></span> - <span class='frac'><span class='num'>5x + 1</span><span class='den'>4</span></span> = 0</span>", hint: "Pomnóż przez 4. Pamiętaj o zmianie znaku w liczniku drugiego ułamka, bo przed nim stoi minus!", answers: ["3", "x=3"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'><span class='frac'><span class='num'>x</span><span class='den'>2</span></span> = <span class='frac'><span class='num'>3</span><span class='den'>5</span></span>(9 - x) - 1</span>", hint: "Pomnóż obustronnie przez 10, aby pozbyć się ułamków (2 i 5 w mianowniku).", answers: ["4", "x=4"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'><span class='frac'><span class='num'>3x - 1</span><span class='den'>5</span></span> - <span class='frac'><span class='num'>x - 2</span><span class='den'>3</span></span> = 0,5x</span>", hint: "Pomnóż przez 15. Zauważ, że z prawej strony: 0,5x * 15 = 7,5x.", answers: ["2", "x=2"] },
+            
+            { text: "Rozwiąż równanie: <br><br><span class='equation'>x - <span class='frac'><span class='num'>3x - 2</span><span class='den'>4</span></span> = -<span class='frac'><span class='num'>1</span><span class='den'>2</span></span>x + 2</span>", hint: "Pomnóż całe równanie obustronnie przez 4. Uważaj na minus przed ułamkiem!", answers: ["2", "x=2"] }
         ];
 
         const container = document.getElementById("tasks-container");
