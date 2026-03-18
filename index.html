@@ -7,7 +7,11 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            background-image: url('background2.jpg');
+            background-size: cover; 
+            background-position: center;
+            background-attachment: fixed; 
+            background-repeat: no-repeat;
             color: #333;
             line-height: 1.6;
             padding: 20px;
@@ -261,16 +265,7 @@
                 }
             }
 
-            const finalMessage = `Uczeń: ${currentStudent}
-Klasa: ${currentClass}
-
-WYNIK GŁÓWNY:
-- Rozwiązane samodzielnie: ${correctCount} z ${totalTasks}
-- Z użyciem gotowej odpowiedzi: ${hintCount} z ${totalTasks}
-- Brak odpowiedzi: ${notSolvedCount} z ${totalTasks}
-
-SZCZEGÓŁY:
-${detailedReport}`;
+            const finalMessage = `Uczeń: ${currentStudent}\nKlasa: ${currentClass}\n\nWYNIK GŁÓWNY:\n- Rozwiązane samodzielnie: ${correctCount} z ${totalTasks}\n- Z użyciem gotowej odpowiedzi: ${hintCount} z ${totalTasks}\n- Brak odpowiedzi: ${notSolvedCount} z ${totalTasks}\n\nSZCZEGÓŁY:\n${detailedReport}`;
 
             const btnSubmit = document.getElementById("btn-submit");
             btnSubmit.textContent = "Wysyłanie...";
